@@ -24,6 +24,7 @@ Simular las actividades de exploración científica que puede realizar la tripul
 - puntos_cientificos = 0
 - actividades_realizadas = 0
 - muestras_recolectadas = 0
+- exploracion_activa = Verdadero
 
 ## 5. Reglas de las actividades
 
@@ -69,6 +70,7 @@ Simular las actividades de exploración científica que puede realizar la tripul
 | costo_energia | Entero | Intermedia | Energía necesaria para realizar la actividad. |
 | costo_provisiones | Entero | Intermedia | Provisiones necesarias para realizar la actividad. |
 | puntos_actividad | Entero | Intermedia | Puntos que otorga la actividad seleccionada. |
+| exploracion_activa | Booleano | Intermedia | Controla si la exploración continúa activa o debe finalizar. |
 | energia_restante | Entero | Salida | Energía disponible al finalizar la exploración. |
 | provisiones_restantes | Entero | Salida | Provisiones disponibles al finalizar la exploración. |
 
@@ -79,6 +81,9 @@ Simular las actividades de exploración científica que puede realizar la tripul
 | puntos_cientificos | 0 |
 | actividades_realizadas | 0 |
 | muestras_recolectadas | 0 |
+| exploracion_activa | Verdadero |
+
+Cuando la tripulación selecciona la opción 4 o no cuenta con los recursos suficientes para realizar una actividad, la variable exploracion_activa cambia a Falso para finalizar la exploración.
 
 ## 10. Constantes del programa
 
@@ -95,7 +100,7 @@ Simular las actividades de exploración científica que puede realizar la tripul
 ## 11. Resumen de la lógica del programa
 
 1. Solicitar la energía y las provisiones disponibles.
-2. Inicializar los contadores en cero.
+2. Inicializar los contadores en cero y activar la exploración.
 3. Mostrar el menú de actividades.
 4. Solicitar una opción a la tripulación.
 5. Verificar la opción seleccionada.
@@ -103,4 +108,5 @@ Simular las actividades de exploración científica que puede realizar la tripul
 7. Si los recursos son suficientes, descontarlos y actualizar los contadores.
 8. Si los recursos son insuficientes, finalizar la exploración sin modificar los valores.
 9. Si se selecciona la opción 4, finalizar la exploración.
-10. Mostrar el resumen final de la exploración.
+10. Si se selecciona una opción no válida, mostrar un mensaje y volver al menú.
+11. Mostrar el resumen final de la exploración.
