@@ -4,144 +4,177 @@
 
 Simular el regreso de la tripulación a la Tierra después de completar el viaje de ida, verificando si cuenta con suficiente combustible para regresar y controlando el consumo de oxígeno, energía y provisiones durante el trayecto.
 
-Si no existe suficiente combustible para regresar, el programa debe calcular cuántos días podría sobrevivir la tripulación según los recursos disponibles e identificar cuáles son los recursos limitantes.
+Si no existe suficiente combustible para regresar, el programa debe calcular cuántos días podría sobrevivir la tripulación según los recursos disponibles e identificar cuáles limitan su supervivencia.
 
 ## 2. Datos de entrada
 
-- Cantidad de tripulantes.
-- Cantidad de días del viaje de ida.
-- Combustible disponible.
-- Oxígeno disponible.
-- Energía disponible.
-- Provisiones disponibles.
+El programa solicita los siguientes datos:
+
+- `tripulantes`: cantidad de personas que conforman la tripulación.
+- `dias_ida`: cantidad de días que duró el viaje de ida.
+- `combustible`: cantidad de combustible disponible.
+- `oxigeno`: cantidad de oxígeno disponible.
+- `energia`: cantidad de energía disponible.
+- `provisiones`: cantidad de provisiones disponibles.
+
+**Supuestos de entrada:**
+
+- Se asume que todos los datos ingresados son números enteros no negativos.
+- La cantidad de tripulantes debe ser mayor que cero para realizar correctamente los cálculos de consumo y supervivencia.
+- El programa trabaja con datos válidos proporcionados por el usuario.
 
 ## 3. Datos de salida
 
-- Resultado del intento de regreso.
-- Cantidad de días completados durante el regreso.
-- Combustible, oxígeno, energía y provisiones restantes.
-- Mensajes sobre los recursos insuficientes, si corresponde.
-- Días de supervivencia estimados cuando la tripulación queda varada.
-- Recursos que limitan la supervivencia.
+El programa muestra:
 
-## 4. Consumo diario de recursos
+- Si la tripulación logró regresar a la Tierra.
+- La cantidad de días completados durante el regreso.
+- Los recursos restantes después de cada día.
+- Los recursos insuficientes cuando no se puede completar un día.
+- Los días estimados de supervivencia cuando no hay suficiente combustible.
+- Los recursos que limitan la supervivencia.
 
-Durante cada día del viaje de regreso se consume la siguiente cantidad de recursos:
+## 4. Constantes y consumo de recursos
 
-| Recurso | Consumo diario |
-|---|---:|
-| Combustible | 8 unidades |
-| Oxígeno | 2 unidades por tripulante |
-| Energía | 5 unidades |
-| Provisiones | 1 unidad por tripulante |
+El programa utiliza las siguientes constantes:
 
-El combustible necesario para regresar se calcula multiplicando los días del viaje de ida por 8.
+| Constante | Valor | Descripción |
+|---|---:|---|
+| `CONSUMO_COMBUSTIBLE` | 8 | Combustible consumido por día. |
+| `CONSUMO_OXIGENO_PERSONA` | 2 | Oxígeno consumido por persona al día. |
+| `CONSUMO_ENERGIA` | 5 | Energía consumida por día. |
+| `CONSUMO_PROVISIONES_PERSONA` | 1 | Provisiones consumidas por persona al día. |
 
-## 5. Condiciones del programa
+El combustible necesario para regresar se calcula multiplicando los días del viaje de ida por el consumo diario de combustible.
 
-### Caso A: Combustible suficiente
+El consumo diario de oxígeno y provisiones depende de la cantidad de tripulantes.
 
-Si el combustible disponible es igual o mayor al combustible necesario para regresar:
+## 5. Lógica del programa
+
+### Caso A: combustible suficiente
+
+Si el combustible disponible es mayor o igual al combustible necesario para regresar:
 
 1. Se inicia la simulación del regreso.
-2. Se utiliza un ciclo para representar cada día del viaje.
-3. Antes de descontar los recursos, se verifica que existan cantidades suficientes de combustible, oxígeno, energía y provisiones.
-4. Si todos los recursos son suficientes, se descuentan sus respectivos consumos.
+2. Se utiliza un ciclo `while` para recorrer cada día del viaje.
+3. Antes de completar cada día, se verifica que existan suficientes recursos:
+   - Combustible.
+   - Oxígeno.
+   - Energía.
+   - Provisiones.
+4. Si todos los recursos son suficientes, se descuentan los consumos correspondientes.
 5. Se aumenta el contador de días completados.
-6. Se muestra el estado de los recursos al finalizar cada día.
-7. Si se completan todos los días, se muestra el mensaje de regreso exitoso y los recursos restantes.
-8. Si algún recurso es insuficiente, el regreso se interrumpe sin descontar los recursos de ese día.
+6. Se muestran los recursos restantes.
+7. Si algún recurso es insuficiente, no se descuentan recursos de ese día y se informa cuál o cuáles recursos faltan.
+8. Se detiene la simulación del regreso.
+9. Finalmente, se indica si la tripulación logró regresar y se muestra el resumen de recursos.
 
-Cuando el regreso se interrumpe, se debe indicar el día en que ocurrió y mostrar cada recurso insuficiente en el siguiente orden: oxígeno, energía y provisiones. Finalmente, se muestra el mensaje de que la tripulación no completó el regreso.
+### Caso B: combustible insuficiente
 
-### Caso B: Combustible insuficiente
+Si el combustible disponible es menor que el necesario para regresar:
 
-Si el combustible disponible es menor al necesario para regresar:
-
-1. Se muestra el mensaje de que la tripulación quedó varada en el destino.
+1. Se informa que la tripulación quedó varada en el destino.
 2. Se calcula cuántos días podría sobrevivir según cada recurso:
-   - Días por oxígeno = oxígeno disponible dividido entre el consumo diario de oxígeno.
-   - Días por energía = energía disponible dividida entre 5.
-   - Días por provisiones = provisiones disponibles divididas entre la cantidad de tripulantes.
-3. Se identifica el menor resultado mediante estructuras condicionales.
-4. Se muestra la supervivencia estimada.
-5. Se indican todos los recursos limitantes, respetando el orden: oxígeno, energía y provisiones.
+   - Días de oxígeno = oxígeno disponible dividido entre el consumo diario de oxígeno.
+   - Días de energía = energía disponible dividido entre el consumo diario de energía.
+   - Días de provisiones = provisiones disponibles divididas entre la cantidad de tripulantes.
+3. Se utiliza división entera para obtener días completos de supervivencia.
+4. Se determina el menor resultado mediante estructuras condicionales, sin utilizar `min()`.
+5. Se muestra la cantidad estimada de días de supervivencia.
+6. Se identifican todos los recursos que limitan la supervivencia, incluyendo los empates.
+7. Se muestran los recursos disponibles.
 
-Si dos o más recursos tienen el mismo valor mínimo, se deben mostrar todos los recursos que limitan la supervivencia.
+## 6. Variables del programa
 
-## 6. Restricciones de programación
+| Variable | Tipo | Descripción |
+|---|---|---|
+| `tripulantes` | Entero | Cantidad de personas de la tripulación. |
+| `dias_ida` | Entero | Días que duró el viaje de ida. |
+| `combustible` | Entero | Combustible disponible. |
+| `oxigeno` | Entero | Oxígeno disponible. |
+| `energia` | Entero | Energía disponible. |
+| `provisiones` | Entero | Provisiones disponibles. |
+| `combustible_necesario` | Entero | Combustible requerido para regresar. |
+| `consumo_oxigeno` | Entero | Consumo diario de oxígeno de toda la tripulación. |
+| `consumo_provisiones` | Entero | Consumo diario de provisiones de toda la tripulación. |
+| `dias_completados` | Entero | Días completados durante el regreso. |
+| `dia_actual` | Entero | Día que se está simulando. |
+| `regreso_activo` | Booleano | Indica si la simulación del regreso continúa. |
+| `dias_oxigeno` | Entero | Días de supervivencia según el oxígeno. |
+| `dias_energia` | Entero | Días de supervivencia según la energía. |
+| `dias_provisiones` | Entero | Días de supervivencia según las provisiones. |
+| `supervivencia_estimada` | Entero | Menor cantidad de días de supervivencia calculada. |
 
-- No utilizar funciones propias.
-- No utilizar listas, tuplas ni diccionarios.
-- No utilizar break, continue, min ni max.
-- No utilizar bibliotecas o importaciones.
-- Utilizar únicamente entrada y salida por consola.
-- Utilizar nombres descriptivos para las variables.
-- Utilizar constantes en mayúsculas para los valores fijos.
-- Utilizar estructuras condicionales y ciclos permitidos por la consigna.
-- No utilizar estructuras de datos adicionales.
+## 7. Cálculos principales
 
-## 7. Tabla de variables
+**Combustible necesario:**
 
-| Nombre | Tipo de dato | Clasificación | Descripción |
-|---|---|---|---|
-| tripulantes | Entero | Entrada | Cantidad de personas que forman parte de la tripulación. |
-| dias_ida | Entero | Entrada | Cantidad de días utilizados en el viaje de ida. |
-| combustible | Entero | Entrada | Combustible disponible para el regreso. |
-| oxigeno | Entero | Entrada | Oxígeno disponible para la tripulación. |
-| energia | Entero | Entrada | Energía disponible para el regreso. |
-| provisiones | Entero | Entrada | Provisiones disponibles para la tripulación. |
-| combustible_necesario | Entero | Intermedia | Cantidad de combustible necesaria para completar el regreso. |
-| dias_completados | Entero | Intermedia | Cantidad de días completados durante el regreso. |
-| dia_actual | Entero | Intermedia | Día que se está simulando durante el regreso. |
-| consumo_oxigeno | Entero | Intermedia | Cantidad de oxígeno consumida diariamente por la tripulación. |
-| consumo_provisiones | Entero | Intermedia | Cantidad de provisiones consumidas diariamente por la tripulación. |
-| dias_oxigeno | Entero | Intermedia | Días de supervivencia estimados según el oxígeno disponible. |
-| dias_energia | Entero | Intermedia | Días de supervivencia estimados según la energía disponible. |
-| dias_provisiones | Entero | Intermedia | Días de supervivencia estimados según las provisiones disponibles. |
-| supervivencia_estimada | Entero | Salida | Cantidad mínima de días que podría sobrevivir la tripulación. |
+`combustible_necesario = dias_ida * CONSUMO_COMBUSTIBLE`
 
-## 8. Valores y constantes del programa
+**Consumo diario de oxígeno:**
 
-| Nombre | Valor | Descripción |
-|---|---:|---|
-| CONSUMO_COMBUSTIBLE | 8 | Combustible consumido por día. |
-| CONSUMO_OXIGENO_PERSONA | 2 | Oxígeno consumido diariamente por cada tripulante. |
-| CONSUMO_ENERGIA | 5 | Energía consumida por día. |
-| CONSUMO_PROVISIONES_PERSONA | 1 | Provisiones consumidas diariamente por cada tripulante. |
+`consumo_oxigeno = tripulantes * CONSUMO_OXIGENO_PERSONA`
 
-## 9. Cálculos principales
+**Consumo diario de provisiones:**
 
-### Combustible necesario
+`consumo_provisiones = tripulantes * CONSUMO_PROVISIONES_PERSONA`
 
-Combustible necesario = días de ida × consumo diario de combustible.
+**Días de supervivencia por oxígeno:**
 
-### Consumo diario de oxígeno
+`dias_oxigeno = oxigeno // consumo_oxigeno`
 
-Consumo de oxígeno = cantidad de tripulantes × consumo de oxígeno por persona.
+**Días de supervivencia por energía:**
 
-### Consumo diario de provisiones
+`dias_energia = energia // CONSUMO_ENERGIA`
 
-Consumo de provisiones = cantidad de tripulantes × consumo de provisiones por persona.
+**Días de supervivencia por provisiones:**
 
-### Días de supervivencia
+`dias_provisiones = provisiones // tripulantes`
 
-- Días por oxígeno = oxígeno disponible // consumo diario de oxígeno.
-- Días por energía = energía disponible // consumo diario de energía.
-- Días por provisiones = provisiones disponibles // consumo diario de provisiones.
+Para determinar la supervivencia estimada, se comparan los tres resultados mediante estructuras condicionales y se conserva el menor valor.
 
-La supervivencia estimada corresponde al menor de los tres resultados. La identificación del resultado se realiza mediante condiciones, sin utilizar la función `min()`.
+## 8. Estructuras de programación utilizadas
 
-## 10. Resumen de la lógica del programa
+- Variables para almacenar los datos de entrada y los resultados.
+- Constantes para representar los consumos de recursos.
+- Operaciones aritméticas para calcular los consumos y la supervivencia.
+- Condicionales `if` para verificar los recursos disponibles y determinar los resultados.
+- Ciclo `while` para simular el regreso día por día.
+- Operadores de comparación para evaluar las condiciones.
+- Operador lógico `and` para comprobar que todos los recursos sean suficientes.
 
-1. Solicitar los datos de entrada de la tripulación y los recursos disponibles.
+## 9. Restricciones de programación
+
+El programa respeta las restricciones establecidas para el proyecto:
+
+- No utiliza funciones propias (`def`).
+- No utiliza listas, tuplas ni diccionarios.
+- No utiliza bibliotecas ni importaciones.
+- No utiliza `min()`, `max()`, `break`, `continue`, `exit()` ni `quit()`.
+- Utiliza únicamente entrada y salida por consola.
+- Utiliza nombres descriptivos para las variables.
+- Las constantes se escriben en mayúsculas.
+- Utiliza estructuras condicionales y ciclos permitidos.
+
+## 10. Resultado esperado
+
+El programa debe permitir simular dos situaciones:
+
+- Cuando existe combustible suficiente, la tripulación intenta regresar y consume los recursos correspondientes por cada día completado.
+- Cuando no existe combustible suficiente, la tripulación queda varada y el programa calcula los días estimados de supervivencia según el recurso más limitado.
+
+En ambos casos se deben mostrar resultados claros y comprensibles para el usuario.
+
+## 11. Resumen del funcionamiento
+
+1. Solicitar los datos de entrada.
 2. Calcular el combustible necesario para regresar.
-3. Comparar el combustible disponible con el necesario.
-4. Si existe suficiente combustible, iniciar la simulación del regreso.
-5. Verificar diariamente que todos los recursos sean suficientes antes de descontarlos.
-6. Si los recursos son suficientes, descontar el consumo y aumentar los días completados.
-7. Si algún recurso es insuficiente, interrumpir el regreso sin modificar los recursos de ese día.
-8. Si se completan todos los días, mostrar el regreso exitoso y los recursos restantes.
-9. Si no existe suficiente combustible, calcular los días de supervivencia según cada recurso.
-10. Identificar la supervivencia estimada y todos los recursos limitantes.
-11. Mostrar los resultados correspondientes al caso ejecutado.
+3. Calcular el consumo diario de oxígeno y provisiones.
+4. Verificar si existe combustible suficiente.
+5. Si existe combustible suficiente, iniciar la simulación diaria del regreso.
+6. Verificar los recursos antes de completar cada día.
+7. Descontar los recursos y actualizar los días completados cuando sea posible.
+8. Si no existe combustible suficiente, calcular los días de supervivencia por recurso.
+9. Determinar el recurso o los recursos que limitan la supervivencia.
+10. Mostrar el resultado correspondiente.
+11. Finalizar el programa.
