@@ -201,3 +201,101 @@ def autorizar_lanzamiento(disponibles, requeridos):
             autorizado = False
 
     return autorizado
+
+
+# ============================================================
+# COMPONENTE B: VIAJE DE IDA
+# ============================================================
+
+
+# ------------------------------------------------------------
+# Funcion: calcular_consumo_diario
+# Descripcion: Calcula el consumo de recursos por dia.
+# ------------------------------------------------------------
+
+def calcular_consumo_diario(tripulantes):
+    combustible = CONSUMO_COMBUSTIBLE_DIA
+    oxigeno = CONSUMO_OXIGENO_DIA * tripulantes
+    energia = CONSUMO_ENERGIA_DIA
+    provisiones = CONSUMO_PROVISIONES_DIA * tripulantes
+
+    consumo = [combustible, oxigeno, energia, provisiones]
+
+    return consumo
+
+
+# ------------------------------------------------------------
+# Funcion: viajar_al_destino
+# Descripcion: Descuenta los recursos del viaje de ida.
+# ------------------------------------------------------------
+
+def viajar_al_destino(recursos, dias_viaje, tripulantes):
+    consumo = calcular_consumo_diario(tripulantes)
+
+    for posicion in range(len(RECURSOS)):
+        recursos[posicion] = (
+            recursos[posicion] - consumo[posicion] * dias_viaje
+        )
+
+    return recursos
+
+
+# ------------------------------------------------------------
+# Funcion: recursos_alcanzan
+# Descripcion: Verifica si hay recursos para un dia.
+# ------------------------------------------------------------
+
+def recursos_alcanzan(recursos, consumo):
+    alcanzan = True
+
+    for posicion in range(len(RECURSOS)):
+        if recursos[posicion] < consumo[posicion]:
+            alcanzan = False
+
+    return alcanzan
+
+
+# ------------------------------------------------------------
+# Funcion: simular_trayecto
+# Descripcion: Simula un trayecto dia por dia.
+# ------------------------------------------------------------
+
+def simular_trayecto(recursos, dias, tripulantes):
+    consumo = calcular_consumo_diario(tripulantes)
+    dias_completados = 0
+    puede_continuar = True
+
+    while dias_completados < dias and puede_continuar:
+        if recursos_alcanzan(recursos, consumo):
+            for posicion in range(len(RECURSOS)):
+                recursos[posicion] = (
+                    recursos[posicion] - consumo[posicion]
+                )
+
+            dias_completados = dias_completados + 1
+
+            print(
+                "Día", dias_completados,
+                "| Combustible:", recursos[COMBUSTIBLE],
+                "| Oxígeno:", recursos[OXIGENO],
+                "| Energía:", recursos[ENERGIA],
+                "| Provisiones:", recursos[PROVISIONES]
+            )
+        else:
+            puede_continuar = False
+
+    return dias_completados
+
+# ------------------------------------------------------------
+# Funcion: mostrar_recursos
+# Descripcion: Muestra los recursos disponibles.
+# ------------------------------------------------------------
+
+def mostrar_recursos(recursos):
+    print("Recursos restantes:")
+
+    for posicion in range(len(RECURSOS)):
+        nombre_recurso = RECURSOS[posicion].capitalize()
+        cantidad = recursos[posicion]
+
+        print("- " + nombre_recurso + ":", cantidad, "unidades")
